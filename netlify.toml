@@ -20,7 +20,6 @@
 # Specific branch context: all deploys from this specific branch will inherit
 # these settings.
 [context.production]
-    command = "jekyll build"
     environment = { JEKYLL_ENV = "production" }
 
 # Specific branch context: all deploys from this specific branch will inherit
