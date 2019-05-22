@@ -49,7 +49,8 @@ const exportPdfDocFolders = (sitePath, docFolders) => {
     docFolders.forEach(function (folder) {
         // find all the folders containing html files
         const folderPath = path.join(sitePath, folder)
-        let htmlFilePaths = glob.sync(path.join(folderPath, '*.html'))
+        let htmlFilePaths = glob.sync('*.html', { cwd: folderPath })
+        htmlFilePaths = htmlFilePaths.map((filepath) => path.join(folderPath, filepath))
 
         // Remove folders without HTML files (don't want empty pdfs)
         if (htmlFilePaths.length === 0) return
