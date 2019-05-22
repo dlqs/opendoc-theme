@@ -12,7 +12,7 @@ const options = {
     base: 'file://' + sitePath + '/',
     border: {
         right: '60px', // default is 0, units: mm, cm, in, px
-       left: '60px',
+        left: '60px',
     },
     header: {
         height: '80px',
@@ -35,7 +35,6 @@ const main = () => {
 }
 
 const exportPdfTopLevelDocs = (sitePath) => {
-    //let htmlFilePaths = glob.sync(path.join(sitePath, '*.html'))
     let htmlFilePaths = glob.sync('*.html', { cwd: sitePath })
     htmlFilePaths = htmlFilePaths.filter((filepath) => !printIgnoreFiles.includes(filepath))
     htmlFilePaths = htmlFilePaths.map((filepath) => path.join(sitePath, filepath))
@@ -81,6 +80,7 @@ const createPdf = (htmlFilePaths, outputFolderPath) => {
         const file = fs.readFileSync(filePath)
         const dom = new jsdom.JSDOM(file)
 
+        // html-pdf can't deal with these
         removeTagsFromDom(dom, 'script')
         removeTagsFromDom(dom, 'iframe')
 
@@ -111,13 +111,14 @@ const createPdf = (htmlFilePaths, outputFolderPath) => {
 }
 
 // Returns a list of the valid document (i.e. folder) paths
-const getDocumentFolders = (sitePath, printIgnore) => {
+const getDocumentFolders = (sitePath, printIgnoreFolders) => {
     return fs.readdirSync(sitePath).filter(function (filePath) {
         return fs.statSync(path.join(sitePath, filePath)).isDirectory() &&
             !printIgnoreFolders.includes(filePath)
     })
 }
 
+// Returns true if config file contains section_order field
 const configFileHasValidOrdering = (configFilepath) => {
     try {
         const configYml = yamlToJs(configFilepath)
