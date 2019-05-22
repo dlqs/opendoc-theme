@@ -77,7 +77,7 @@ const createPdf = (htmlFilePaths, outputFolderPath) => {
         const dom = new jsdom.JSDOM(file)
 
         // Remove iframes because html-pdf will not work with them
-        const iframes = dom.window.document.querySelectorAll('iframe')
+        const iframes = dom.window.document.getElementsByTagName('iframe')
         for (let i = 0; i < iframes.length; i++) {
             iframes[i].parentNode.removeChild(iframes[i])
         }
