@@ -106,7 +106,7 @@ As they say, a picture speaks a thousand words. To add a image, you need both th
 ![Alternative text if image doesn't load](/images/govtech-logo.gif)
 ```
 <div class="examples-box">
-	<img src="./images/govtech-logo.gif" alt="Alternative text if image doesn't load"/>
+	<img src="/images/govtech-logo.gif" alt="Alternative text if image doesn't load"/>
 </div>
 
 <a href="https://opendocsg.github.io/editor/#HcoxCoAwDADAr8RJXZrdzc3BH4hIwRgDtSlNKD5f8Obrtjk51RxdGoHT6yAXyBOZ4FSy3Dskjec+3O7FJkQtlANrC8b4P8NVWY9FqwRrPH4=" target="_blank">
