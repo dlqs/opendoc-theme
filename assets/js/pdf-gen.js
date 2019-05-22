@@ -21,19 +21,24 @@ const options = {
         height: '80px',
     },
 }
-// List of top-level folder names which are not documents
-const printIgnore = ['assets', 'files', 'iframes', 'images']
+// List of top-level folder names which are not to be printed
+const printIgnoreFolders = ['assets', 'files', 'iframes', 'images']
+// List of top-level .html files which are not to be printed
+const printIgnoreFiles = ['export.html']
 
 const main = () => {
     console.log('Base options: ', options.base)
     // creating exports of individual documents
-    const docFolders = getDocumentFolders(sitePath, printIgnore)
+    const docFolders = getDocumentFolders(sitePath, printIgnoreFolders)
     exportPdfDocFolders(sitePath, docFolders)
     exportPdfTopLevelDocs(sitePath)
 }
 
 const exportPdfTopLevelDocs = (sitePath) => {
-    let htmlFilePaths = glob.sync(path.join(sitePath, '*.html'))
+    //let htmlFilePaths = glob.sync(path.join(sitePath, '*.html'))
+    let htmlFilePaths = glob.sync('*.html', { cwd: sitePath })
+    htmlFilePaths = htmlFilePaths.filter((filepath) => !printIgnoreFiles.includes(filepath))
+    htmlFilePaths = htmlFilePaths.map((filepath) => path.join(sitePath, filepath))
     // Remove folders without HTML files (don't want empty pdfs)
     if (htmlFilePaths.length === 0) return
     const configFilepath = path.join(sitePath, '..', '_config.yml')
@@ -76,11 +81,8 @@ const createPdf = (htmlFilePaths, outputFolderPath) => {
         const file = fs.readFileSync(filePath)
         const dom = new jsdom.JSDOM(file)
 
-        // Remove iframes because html-pdf will not work with them
-        const iframes = dom.window.document.getElementsByTagName('iframe')
-        for (let i = 0; i < iframes.length; i++) {
-            iframes[i].parentNode.removeChild(iframes[i])
-        }
+        removeTagsFromDom(dom, 'script')
+        removeTagsFromDom(dom, 'iframe')
 
         // If a <img src=...> link src begins with '/', it is a relative link
         // and needs to be prepended with '.' to make the images show in the pdf
@@ -112,7 +114,7 @@ const createPdf = (htmlFilePaths, outputFolderPath) => {
 const getDocumentFolders = (sitePath, printIgnore) => {
     return fs.readdirSync(sitePath).filter(function (filePath) {
         return fs.statSync(path.join(sitePath, filePath)).isDirectory() &&
-            !printIgnore.includes(filePath)
+            !printIgnoreFolders.includes(filePath)
     })
 }
 
@@ -146,6 +148,14 @@ const reorderHtmlFilePaths = (htmlFilePaths, order) => {
         }
     }
     return htmlFilePaths
+}
+
+// Removes <tag></tag> from dom and everything in between them
+const removeTagsFromDom = (dom, tagname) => {
+    const tags = dom.window.document.getElementsByTagName(tagname)
+    for (let i = tags.length - 1; i >= 0; i--) {
+        tags[i].parentNode.removeChild(tags[i])
+    }
 }
 
 // Section names correspond to titles at the top of .md files in source folder
