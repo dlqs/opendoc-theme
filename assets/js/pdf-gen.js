@@ -12,7 +12,7 @@ const options = {
     base: 'file://' + sitePath + '/',
     border: {
         right: '60px', // default is 0, units: mm, cm, in, px
-        left: '60px',
+       left: '60px',
     },
     header: {
         height: '80px',
@@ -49,7 +49,8 @@ const exportPdfDocFolders = (sitePath, docFolders) => {
     docFolders.forEach(function (folder) {
         // find all the folders containing html files
         const folderPath = path.join(sitePath, folder)
-        let htmlFilePaths = glob.sync(path.join(folderPath, '*.html'))
+        let htmlFilePaths = glob.sync('*.html', { cwd: folderPath })
+        htmlFilePaths = htmlFilePaths.map((filepath) => path.join(folderPath, filepath))
 
         // Remove folders without HTML files (don't want empty pdfs)
         if (htmlFilePaths.length === 0) return
@@ -79,6 +80,16 @@ const createPdf = (htmlFilePaths, outputFolderPath) => {
         const iframes = dom.window.document.querySelectorAll('iframe')
         for (let i = 0; i < iframes.length; i++) {
             iframes[i].parentNode.removeChild(iframes[i])
+        }
+
+        // If a <img src=...> link src begins with '/', it is a relative link
+        // and needs to be prepended with '.' to make the images show in the pdf
+        const imgsrcs = dom.window.document.getElementsByTagName('img')
+        for (let i=0; i<imgsrcs.length; i++) {
+            const imgsrc = imgsrcs[i]
+            if (imgsrc.src.startsWith('/')) {
+                imgsrc.src = '.' + imgsrc.src
+            }
         }
 
         // Concat all the id:main-content divs
