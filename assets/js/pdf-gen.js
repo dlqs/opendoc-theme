@@ -81,6 +81,16 @@ const createPdf = (htmlFilePaths, outputFolderPath) => {
             iframes[i].parentNode.removeChild(iframes[i])
         }
 
+        // If a <img src=...> link src begins with '/', it is a relative link
+        // and needs to be prepended with '.' to make the images show in the pdf
+        const imgsrcs = dom.window.document.getElementsByTagName('img')
+        for (let i=0; i<imgsrcs.length; i++) {
+            const imgsrc = imgsrcs[i]
+            if (imgsrc.src.startsWith('/')) {
+                imgsrc.src = '.' + imgsrc.src
+            }
+        }
+
         // Concat all the id:main-content divs
         try {
             const oldNode = dom.window.document.getElementById('main-content')
