@@ -10,7 +10,10 @@
                  npm i jsdom && \
                  npm i mark-twain && \
                  npm i js-yaml && \
-                 node _site/assets/js/pdf-gen.js '''
+                 node _site/assets/js/pdf-gen.js && \
+                 cat _site/assets/siteIndex.json | node _site/assets/js/prebuild-lunr-index.js'''
+
+>>>>>>> 598b71458cc9b46a5db9ecab7c0c71f95adb3b8a
     environment = { JEKYLL_ENV = "development" }
 
     # Directory (relative to root of your repo) that contains the deploy-ready 
