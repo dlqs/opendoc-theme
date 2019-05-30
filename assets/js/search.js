@@ -65,25 +65,39 @@
     var sectionIndex = {}
     var minQueryLength = 3
     var lunrIndex = null
-
     // Begin Lunr Indexing
     // =============================================================================
-    var getLunrIndex = function (cb) {
+    var getLunrIndex = function () {
         var lunrIndexUrl = '{{ "/assets/lunrIndex.json" | relative_url }}'
         return fetch(lunrIndexUrl)
             .then(function (res) {
-                return res.json()
+                if (res.status === 200) {
+                    return res.json()
+                }
+                throw new Error('Failed with HTTP code: ' + res.status)
             }, function (err) {
-                console.log('Fetch could not find lunr index: ' + err)
+                console.error('Fetch promise to retrieve Lunr Index was rejected: ' + err)
             })
             .then(function (json) {
                 lunrIndex = lunr.Index.load(json.index)
+                lunrIndex.pipeline.remove(lunr.stemmer)
                 sectionIndex = json.sectionIndex
             })
             .catch(function (err) {
-                console.log('Lunr index did not load successfully: ' + err)
+                console.error('Fetch failed to get the Lunr index: ' + err)
             })
     }
+
+    // Load Lunr Index if set
+    // ============================================================================
+    const searchSetOffline = '{{ site.offline_search_only }}' === 'true' ?
+        true :
+        false
+
+    if (searchSetOffline) {
+        getLunrIndex()
+    }
+
     // Search
     // =============================================================================
     // Helper function to translate lunr search results
@@ -96,7 +110,8 @@
         var lunrResults = allLunrResults.slice(0, maxResults)
         return lunrResults.map(function (result) {
             var matchedDocument = sectionIndex[result.ref]
-            var snippets = []
+            var contentSnippets = []
+            var titleSnippets = []
             var snippetsRangesByFields = {}
             // Loop over matching terms
             var rangesByFields = {}
@@ -159,7 +174,7 @@
                 positions = snippetsRangesByFields[field]
                 positions.forEach(function (position) {
                     matchedText = matchedDocument[field]
-                    snippet = ''
+                    var snippet = ''
                     // If start of matched text dont use ellipsis
                     if (position[0] > 0) {
                         snippet += '...'
@@ -173,15 +188,19 @@
                         }
                         snippet += matchedText.substring(position[i], position[i + 1])
                     }
-                    snippet += '...'
-                    snippets.push(snippet)
+                    if (field === 'title') {
+                        titleSnippets.push(snippet)
+                    } else {
+                        snippet += '...'
+                        contentSnippets.push(snippet)
+                    }
                 })
             }
             // Build a simple flat object per lunr result
             return {
-                title: matchedDocument.title,
+                title: titleSnippets.length === 0 ? matchedDocument.title: titleSnippets.join(' '),
                 documentTitle: matchedDocument.documentTitle,
-                content: snippets.join(' '),
+                content: contentSnippets.join(' '),
                 url: matchedDocument.url
             }
         })
@@ -266,7 +285,6 @@
     }
 
     formatResult = function (result) {
-        console.log(result)
         var content = null
         var title = result._source.title
         var regex = /<mark>(.*?)<\/mark>/g
@@ -442,25 +460,34 @@
 
     var lunrSearch = function (query) {
         // Add wildcard before and after
-        var queryTerm = '*' + query + '*'
+        var queryTerm = refineLunrSearchQuery(query)
         var lunrResults = lunrIndex.search(queryTerm)
         var results = translateLunrResults(lunrResults)
         highlightBody()
         renderSearchResultsFromLunr(results)
     }
 
-    // Main
-    // ============================================================================
-    const searchSetOffline = '{{ site.offline_search_only }}' === 'true' ?
-        true :
-        false
+    var refineLunrSearchQuery = function(query) {
+        FUZZY_FACTOR = 4 // range: 1 to INF. Lower is fuzzier *relative to term length*.
+        var addFuzzyOperator = function(term, fuzziness) {
+            return term + '~' + 
+                Math.floor(term.length / Math.max(1, fuzziness)).toString()
+        }
+        var stringIsLettersOnly = function(str) {
+            return /^[a-zA-Z]+$/.test(str)
+        }
 
-    if (searchSetOffline) {
-        getLunrIndex()
-            .catch(function(err) {
-                console.log('Lunr index could not be found: ' + err)
-            })
+        var terms = query.split(' ')
+        terms = terms.map(function(term) {
+            if (stringIsLettersOnly(term)) {
+                return addFuzzyOperator(term, FUZZY_FACTOR)
+            }           
+            return term
+        })
+        console.log(terms)
+        return terms.join(' ')
     }
+
 
     var onSearchChange = function () {
         var query = searchBoxElement.value.trim()

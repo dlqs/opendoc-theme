@@ -11,7 +11,7 @@
                  npm i lunr && \
                  npm i mark-twain && \
                  npm i js-yaml && \
-                 cat _site/assets/siteIndex.json | node _site/assets/js/prebuild-lunr-index.js'''
+                 node _site/assets/js/prebuild-lunr-index.js'''
 
     environment = { JEKYLL_ENV = "development" }
 
