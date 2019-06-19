@@ -10,28 +10,13 @@
  * header under connect-src since they are proxied through here, i.e. from script.
  */
 
-var urlsToCache = [];
-{% for post in site.posts %}
-urlsToCache.push("{{ post.permalink | relative_url }}");
-{% endfor %}
-{% for page in site.pages %}
-{% if page.permalink %}
-urlsToCache.push("{{ page.permalink }}");
-{% endif %}
-{% if page.url %}
-urlsToCache.push("{{ page.url }}");
-{% endif %}
-{% endfor %}
 
 var CACHE_NAME = '{{ site.title | slugify }}-cache-v1'
-
-var blacklist = ["{{ '/assets/siteIndex.json' | relative_url }}"]
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      console.log(urlsToCache.length)
-    return cache.addAll(urlsToCache)
+    return 'Cache opened success'
   }).catch(function(error) {
     return error
   }))
