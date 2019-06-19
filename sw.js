@@ -20,6 +20,7 @@ urlsToCache.push("{{ page.url }}");
 {% endfor %}
 
 var CACHE_NAME = '{{ site.title | slugify }}-cache-v1'
+console.log(urlsToCache)
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
