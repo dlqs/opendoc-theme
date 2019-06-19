@@ -1,0 +1,46 @@
+# Globe-Sea Offshore Engineering Pte Ltd _v_ DNET Contract Services Pte Ltd  
+
+<table id="info-table"><tbody><tr class="info-row"><td class="txt-label" style="padding: 4px 0px; white-space: nowrap" valign="top">Case Number</td><td class="txt-body">HC/Originating Summons No 1497 of 2018</td></tr><tr class="info-row"><td class="txt-label" style="padding: 4px 0px; white-space: nowrap" valign="top">Decision Date</td><td class="txt-body">18 March 2019</td></tr><tr class="info-row"><td class="txt-label" style="padding: 4px 0px; white-space: nowrap" valign="top">Tribunal/Court</td><td class="txt-body">High Court</td></tr><tr class="info-row"><td class="txt-label" style="padding: 4px 0px; white-space: nowrap" valign="top">Coram</td><td class="txt-body">Choo Han Teck J</td></tr><tr class="info-row"><td class="txt-label" style="padding: 4px 0px; white-space: nowrap" valign="top">Counsel Name(s)</td><td class="txt-body">Lalwani Anil Mangan (DL Law Corporation) for the applicant; Chia Wei Lin Rebecca and Roy'yani Binte Abdul Razak (I.R.B. Law LLP) for the respondent.</td></tr><tr class="info-row"><td class="txt-label" style="padding: 4px 0px; white-space: nowrap" valign="top">Parties</td><td class="txt-body">Globe-Sea Offshore Engineering Pte Ltd — DNET Contract Services Pte Ltd</td></tr></tbody></table>
+
+Civil Procedure – Appeals – Leave
+
+18 March 2019
+
+### Choo Han Teck J:
+
+1       This is Globe-Sea Offshore Engineering Pte Ltd’s (“the Applicant”) application for leave to appeal against the learned District Judge Constance Tay Woan Fen (“Tay DJ”)’s decision in MC/MC 3212/2017 (“MC 3212”). In MC 3212, DNET Contract Services Pte Ltd (“the Respondent”) claimed against the Applicant for $44,265 for work done pursuant to four variation orders (“the Contracts”) entered between the Respondent and the Applicant under which the Respondent provided renovation services at the Applicant’s office premises. The Applicant’s defence was that the Contracts were invalid as they were signed by one Maricel Malazarte Cantero (“Ms Maricel”), who was one of the Applicant’s secretarial staff and had no authority to enter into the Contracts. In return, the Applicant counterclaimed against the Respondent for the sum of $22,540, being the costs incurred by the Applicant for having to engage another contractor as a result of the Respondent’s negligence in failing to ensure that the building and fire plans were submitted to the Fire Safety & Shelter Department (“FSSD”).
+
+2       In MC 3212, Ms Maricel testified but the managing director of the Applicant, Mr Song, did not. Tay DJ held that Ms Maricel had the actual authority to enter into the Contracts on behalf of the Applicant, and since the Contracts were performed, the Applicant was obliged to pay the Respondent the contractual sum of $44,265. Furthermore, Tay DJ dismissed the Applicant’s counterclaim on the grounds that: (1) the Respondent was under no contractual obligation to submit the building and fire plans to the FSSD, and (2) in any event, the Applicant did not properly plead the particulars of its claim in the tort of negligence, and did not adduce any evidence of loss or damage suffered.
+
+3       On 6 December 2018, the Applicant filed an application for leave to appeal against DJ Tay’s decision in MC 3212 which is the subject of this hearing. The preliminary issue to be decided is whether such an application is required. As at 6 December 2018, s 21 of the Supreme Court of Judicature Act (Cap 322, Rev Ed 2007) (“SCJA”) states as follow:
+
+(1)    Subject to the provisions of this Act and any other written law, an appeal shall lie to the High Court from a decision of a District Court or Magistrate’s Court –
+
+(a)    in any case where the amount in dispute, or the value of the subject-matter, at the hearing before that District Court or Magistrate’s Court (excluding interest and costs) exceeds $50,000 or such other amount as may be specified by an order made under subsection (3); or
+
+(b)    with the leave of that District Court or Magistrate’s Court or the High Court, in any other case.
+
+Ms Rebecca Chia (“Ms Chia”), counsel for the Respondent, argues that both the Respondent’s contractual claim for $44,265 as well as the Applicant’s counterclaim for $23,540 should be added together in determining the total amount in dispute. Ms Chia submits that the total amount in dispute, which is $67,805, exceeds the appeal threshold of $50,000 under s 21(1)(a) SCJA and hence, leave to appeal is not required. On the contrary, Mr Lalwani, counsel for the Applicant argues that leave to appeal is required because any permutation of whether the Applicant or the Respondent fails or succeeds in their respective claims will not result in the overall disputed sum to be above the appeal threshold of $50,000.
+
+4       In this case, leave to appeal is required because contrary to what Ms Chia suggests, the amount in dispute in a claim and a counterclaim should not be added together in determining whether the appeal threshold is met. Woo JC (as he then was) in _Datawork Pte Ltd v Cyberinc Pte Ltd_ (“_Datawork_”) dealt with this issue at \[87\]–\[91\], and I am in full agreement with him. In summary, leave to appeal is required for the following reasons:
+
+(a)     First, any reference to the amount in dispute at trial, must be construed as referring to the trial of the action. In the context of a claim and a counterclaim, the trial consists of two actions because a claim and a counterclaim are separate actions. In this case, the Respondent has a claim in contract while the Applicant, a counterclaim in tort. These are separate actions and only their individual amounts in dispute will be relevant in determining whether the appeal threshold is met.
+
+(b)     Second, an anomaly will result if courts were to allow parties to add the amount in dispute in a claim together with the counterclaim. To illustrate, if such an addition is possible, the Applicant’s leave to appeal in this case would be unimpeded, whereas, had the Applicant filed its counterclaim as a separate action in a separate proceeding (notwith-standing the possibility that both actions may be consolidated), its right to appeal would be restricted. This cannot be the case.
+
+(c)     Third, the possible permutations of whether the Applicant or the Respondent succeeds or fails in their respective claims are irrelevant. “Parliament did not intend for the parties and the courts to engage in an exercise to determine which scenario was applicable for every claim and counterclaim in order to determine whether leave to appeal was required” (see _Datawork_ at \[91\]).
+
+5       Next, I consider whether leave to appeal should be granted. Mr Lalwani submits that leave to appeal should be granted for two reasons. First, that Tay DJ failed to consider whether the Respondent should have taken additional steps to verify and confirm Ms Maricel’s actual and/or apparent authority. Mr Lalwani argues that had Mr Song been called as a witness, he would have testified that Ms Maricel had no authority to enter into the Contracts. Second, that Tay DJ failed to consider whether the Respondent owed a duty of care to have made enquiries and taken steps to ensure that the building and fire plans were submitted to the FSSD. Ms Chia submits that leave to appeal should not be granted as the issues raised by the Applicant have already been dealt with by Tay DJ in MC 3212.
+
+6       I am satisfied that leave to appeal should not be granted for the following reasons:
+
+(a)     First, leave should not be granted when there are mere questions of fact to be considered. Exceptions however, could be made for errors of fact that are beyond dispute, for example, when a notice served on 1 July 2018 was erroneously taken to have been served on 1 June 2018 (See _Essar Steel Ltd v Bayerische Landesbank and others_ at \[22\] – \[26\]). From the record, I find that there is no basis to disturb Tay DJ’s finding of fact that Ms Maricel had the actual authority to enter into the Contracts on behalf of the Applicant. Consequently, it is not necessary to consider whether the Respondent should have taken additional steps to verify Ms Maricel’s actual authority.
+
+(b)     Second, if Mr Song’s testimony would have had an important influence on the decision at trial, he should have been called as a witness in MC 3212. The Applicant failed to do so, and no reasonable explanation was offered as to why Mr Song was not called as a witness in MC 3212. He was, after all, given copies of the correspondence between Ms Maricel and the Respondent.
+
+(c)     Third, from the record, I find that there is no evidence to support the Applicant’s counterclaim in the tort of negligence, and neither did the trial judge. I am therefore satisfied that Tay DJ was correct in dismissing the Applicant’s counterclaim.
+
+7       For the reasons above, the Applicant’s application for leave to appeal is dismissed. I will fix costs to the Respondent at $1,000 plus reasonable disbursements.
+
+
+Source: [link](https://www.lawnet.sg:443/lawnet/web/lawnet/free-resources?p_p_id=freeresources_WAR_lawnet3baseportlet&p_p_lifecycle=1&p_p_state=normal&p_p_mode=view&_freeresources_WAR_lawnet3baseportlet_action=openContentPage&_freeresources_WAR_lawnet3baseportlet_docId=%2FJudgment%2F22937-SSP.xml)
