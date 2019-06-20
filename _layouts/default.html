@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta property="og:image" content="{{ '/assets/images/logo-full.png' | relative_url }}">
 
+  <!-- ServiceWorker must be registered before network requests are fired in order to cache them -->
   <script src="{{ '/assets/js/register-sw.js' | relative_url }}"></script>
   <link rel="icon" href="{{ '/assets/images/favicon.ico' | relative_url }}">
   <link href="https://fonts.googleapis.com/css?family=Fira+Sans:400,600" rel="stylesheet" type="text/css">
@@ -18,6 +19,7 @@
   <link rel="stylesheet" href="{{ '/assets/styles/main.css' | relative_url }}">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title | escape }}"
     href="{{ '/feed.xml' | relative_url }}">
+  <link rel="manifest" href="{{ '/assets/manifest.json' | relative_url }}">
   <!-- Polyfill for corejs functions, promises, array.includes, array.from, etc. -->
   <script src="{{ '/assets/vendor/babel-polyfill.min.js' | relative_url }}"></script>
   <!-- Polyfill for dom functions -->
