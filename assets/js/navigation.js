@@ -20,7 +20,7 @@
     var allDirectories = document.querySelectorAll('a.tod-container')
     allDirectories.forEach(function (directory) {
         directory.addEventListener('click', function (event) {
-            event.stopPropagation()
+            //event.stopPropagation()
             event.preventDefault()
             var target = event.target;
             while (target !== this) {
@@ -117,6 +117,7 @@
         }
         if (anchor && (anchor.host === '' || anchor.host === window.location.host) && anchor.classList.contains('nav-link') && !anchor.hasAttribute('download')) {
             // Prevent page load
+            console.log('Stopping propagation of click at navigation.js')
             event.preventDefault()
             event.stopPropagation()
             if (anchor.hash.length > 0) {

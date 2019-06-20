@@ -37,18 +37,21 @@ self.addEventListener('fetch', function(event) {
     return;
   }
   event.respondWith(
-    caches.match(event.request)
+    caches.match(event.request) // hit cache first
       .then(function(cached) {
-        var networked = fetch(event.request)
-          .then(fetchedFromNetwork, unableToResolve)
-          .catch(unableToResolve);
-        return cached || networked;
+        if (navigator.onLine) { // attempt update
+          var networked = fetch(event.request)
+            .then(fetchedFromNetwork, unableToResolve)
+            .catch(unableToResolve)
+          return cached || networked
+        }
+        return cached
 
         function fetchedFromNetwork(response) {
-          var cacheCopy = response.clone();
+          var cacheCopy = response.clone()
           caches.open(CACHE_NAME)
             .then(function add(cache) {
-              cache.put(event.request, cacheCopy)
+              cache.put(event.request, cacheCopy) // successful update: refresh cache
             })
           return response
         }
