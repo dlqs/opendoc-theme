@@ -7,12 +7,18 @@ body {
   mark {
     font-weight: bold;
   }
+  @include mobile-screen {
+    &.menu-toggled {
+      // Prevents scrolling main body when scrolling nav
+      overflow: hidden;
+    }
+  }
 }
 
 .site-header {
   // site-header should be beneath mobile-menu
   box-sizing: border-box;
-  z-index: 10;
+  z-index: $site-header-z-index;
   height: $site-header-height;
   background: white;
   position: fixed;
@@ -45,8 +51,8 @@ body {
     .site-header-text {
       color: $primary-brand-color;
       margin: 0;
-      font-family: $base-font-family;
-      font-size: 30px;
+      font-family: $header-font-family;
+      font-size: 25px;
     }
 
     .site-last-updated {
@@ -95,6 +101,11 @@ body {
       }
     }
 
+    #sw-loading-icon {
+      display: none;
+      margin-right: -70px;
+    }
+
     .agency-logo {
       max-width: 180px;
       max-height: 44px;
@@ -113,11 +124,17 @@ body {
   }
 }
 
+.index .doc-header {
+  @include desktop-screen {
+    display: none;
+  }
+}
+
 // Document Header
 // -----------
 .doc-header {
   position: fixed;
-  z-index: 2;
+  z-index: $doc-header-z-index;
   top: $mobile-site-header-height;
   left: 0;
   right: 0;
@@ -134,23 +151,13 @@ body {
   // to allow mobile menu to be visible outside of doc-header
   overflow: visible;
 
-  &.index {
-    @include desktop-screen {
-      display: none;
-    }
-  }
-
-  &:not(.index) #site-title {
-    display: none;
-  }
-
   @include mobile-screen {
     &.headroom--pinned {
       top: $mobile-site-header-height;
     }
 
     &.headroom--unpinned {
-      top: calc(#{$mobile-site-header-height} - #{$doc-header-height});
+      top: -$doc-header-height;
     }
   }
 
@@ -191,13 +198,17 @@ body {
   // Children
   .description-container {
     margin-right: $large-spacing;
+    width: 100%;
 
     #document-title {
+      font-size: 20px;
       color: $primary-brand-color;
       overflow: hidden;
-      line-height: 1.3em;
-      // Max two lines
-      max-height: 2.6em;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      // Max two lines (currently, max one line)
+      // line-height: 1.3em;
+      // max-height: 2.6em;
       margin-bottom: 0;
     }
     #document-subtitle {
@@ -205,9 +216,8 @@ body {
       font-size: 11px;
       letter-spacing: 0.6px;
       overflow: hidden;
-      line-height: 1.2em;
-      // Max one line
-      max-height: 1.2em;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       color: #9b9b9b;
       text-transform: uppercase;
     }
@@ -218,11 +228,11 @@ body {
 //----------
 .site-main {
   position: relative;
-  z-index: 0;
+  z-index: $site-main-z-index;
   left: 0;
   right: 0;
   top: 0;
-  padding-top: calc(#{$doc-header-height} + #{$mobile-site-header-height});
+  padding-top: 0;
   padding-left: $large-spacing;
   padding-right: $large-spacing;
   padding-bottom: $spacing;
@@ -240,7 +250,7 @@ body {
   // Expand to fill when the menu is closed
   @include desktop-screen {
     left: $site-nav-width;
-    padding-top: $doc-header-height + $site-header-height;
+    padding-top: 0;
     padding-left: $desktop-spacing;
     padding-right: $desktop-spacing + $body-sidebar-right-padding;
     padding-bottom: $large-spacing;
@@ -266,65 +276,63 @@ body {
   }
 
   h1 {
-    padding-top: calc(1.6 * #{$block-spacing});
-    border-top: 1px solid $divider-color;
+    padding-top: calc(1.6 * #{$block-spacing} + #{$mobile-site-doc-header-height});
   }
   h2 {
-    padding-top: calc(1.4 * #{$block-spacing});
-    border-top: 1px solid $divider-color;
+    padding-top: calc(1.4 * #{$block-spacing} + #{$mobile-site-header-height});
   }
   h3 {
-    padding-top: calc(1.2 * #{$block-spacing});
-    border-top: 1px solid $divider-color;
+    padding-top: calc(1.2 * #{$block-spacing} + #{$mobile-site-header-height});
   }
   h4 {
-    padding-top: calc(1 * #{$block-spacing});
-    border-top: 1px solid $divider-color;
+    padding-top: calc(1 * #{$block-spacing} + #{$mobile-site-header-height});
   }
   h5 {
-    padding-top: calc(0.8 * #{$block-spacing});
-    border-top: 1px solid $divider-color;
+    padding-top: calc(0.8 * #{$block-spacing} + #{$mobile-site-header-height});
   }
   h6 {
-    padding-top: calc(0.6 * #{$block-spacing});
-    border-top: 1px solid $divider-color;
+    padding-top: calc(0.6 * #{$block-spacing} + #{$mobile-site-header-height});
   }
-  h1,
+  a {
+    padding-top: $mobile-site-header-height;
+  }
   h2,
   h3,
   h4,
   h5,
-  h6 {
-    &:first-child {
-      margin-top: 0;
-      border-top: 0px;
-    }
+  h6,
+  a {
+    margin-top: -$mobile-site-header-height;
   }
   @include desktop-screen {
-    // Hack to get browser hash scrolling to work nicely with a fixed header
     h1 {
-      padding-top: calc(2 * #{$block-spacing});
-      border-top: 1px solid $divider-color;
+      padding-top: calc(2 * #{$block-spacing} + #{$site-doc-header-height});
     }
     h2 {
-      padding-top: calc(1.8 * #{$block-spacing});
-      border-top: 1px solid $divider-color;
+      padding-top: calc(1.8 * #{$block-spacing} + #{$site-doc-header-height});
     }
     h3 {
-      padding-top: calc(1.6 * #{$block-spacing});
-      border-top: 1px solid $divider-color;
+      padding-top: calc(1.6 * #{$block-spacing} + #{$site-doc-header-height});
     }
     h4 {
-      padding-top: calc(1.4 * #{$block-spacing});
-      border-top: 1px solid $divider-color;
+      padding-top: calc(1.4 * #{$block-spacing} + #{$site-doc-header-height});
     }
     h5 {
-      padding-top: calc(1.2 * #{$block-spacing});
-      border-top: 1px solid $divider-color;
+      padding-top: calc(1.2 * #{$block-spacing} + #{$site-doc-header-height});
     }
     h6 {
-      padding-top: calc(1 * #{$block-spacing});
-      border-top: 1px solid $divider-color;
+      padding-top: calc(1 * #{$block-spacing} + #{$site-doc-header-height});
+    }
+    a {
+      padding-top: $site-doc-header-height;
+    }
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    a {
+      margin-top: calc(-1 * #{$site-doc-header-height});
     }
   }
 }
@@ -346,7 +354,7 @@ body {
   }
 
   @include desktop-screen {
-    width: calc(100vw - #{$body-sidebar-right-padding} - #{$desktop-spacing});
+    width: calc(100vw - #{$body-sidebar-right-padding} - #{$body-padding});
     font-size: calc(#{$base-font-size} - 4px);
 
     a {

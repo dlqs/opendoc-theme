@@ -52,7 +52,7 @@
         if (configElasticSearchIndex) {
             elasticSearchIndex = configElasticSearchIndex
         }
-        endpoint = '{{ site.server_DEV | append: ' / ' }}' + elasticSearchIndex
+        endpoint = '{{ site.server_DEV | append: '/' }}' + elasticSearchIndex
     }
 
     var search_endpoint = endpoint + '/search'
@@ -67,16 +67,10 @@
     var lunrIndex = null
     // Begin Lunr Indexing
     // =============================================================================
-    var getLunrIndex = function () {
-        var lunrIndexUrl = '{{ "/assets/lunrIndex.json" | relative_url }}'
-        return fetch(lunrIndexUrl)
+    function getLunrIndex() {
+        return fetch('/assets/lunrIndex.json')
             .then(function (res) {
-                if (res.status === 200) {
                     return res.json()
-                }
-                throw new Error('Failed with HTTP code: ' + res.status)
-            }, function (err) {
-                console.error('Fetch promise to retrieve Lunr Index was rejected: ' + err)
             })
             .then(function (json) {
                 lunrIndex = lunr.Index.load(json.index)
@@ -84,15 +78,13 @@
                 sectionIndex = json.sectionIndex
             })
             .catch(function (err) {
-                console.error('Fetch failed to get the Lunr index: ' + err)
+                console.error('Fetch failed to read the Lunr index: ' + err)
             })
     }
 
     // Load Lunr Index if set
     // ============================================================================
-    const searchSetOffline = '{{ site.offline_search_only }}' === 'true' ?
-        true :
-        false
+    var searchSetOffline = "{{ site.offline_search_only }}" === "true" || false
 
     if (searchSetOffline) {
         getLunrIndex()
@@ -105,7 +97,6 @@
     var snippetSpace = 40
     var maxSnippets = 4
     var maxResults = 10
-    var minQueryLength = 3
     var translateLunrResults = function (allLunrResults) {
         var lunrResults = allLunrResults.slice(0, maxResults)
         return lunrResults.map(function (result) {
@@ -184,7 +175,7 @@
                         if (i % 2 == 1) {
                             snippet += '<mark>'
                         } else {
-                            snippet += '</mark> '
+                            snippet += '</mark>'
                         }
                         snippet += matchedText.substring(position[i], position[i + 1])
                     }
@@ -196,11 +187,16 @@
                     }
                 })
             }
+            var joinHighlights = function (str) {
+                if (str) {
+                    return str.replace(/<\/mark> <mark>/g, ' ')
+                }
+            }
             // Build a simple flat object per lunr result
             return {
-                title: titleSnippets.length === 0 ? matchedDocument.title: titleSnippets.join(' '),
-                documentTitle: matchedDocument.documentTitle,
-                content: contentSnippets.join(' '),
+                title: joinHighlights(titleSnippets.length === 0 ? matchedDocument.title: titleSnippets.join(' ')),
+                documentTitle: joinHighlights(matchedDocument.documentTitle),
+                content: joinHighlights(contentSnippets.join(' ')),
                 url: matchedDocument.url
             }
         })
@@ -262,31 +258,31 @@
             return part !== ''
         })
         element.href = '/' + urlParts.join('/')
-        var elementLeft = document.createElement('div')
-        elementLeft.className = 'left'
-        // Document title
-        elementLeft.innerHTML = result.documentTitle || '{{ site.title }}'
-        var elementRight = document.createElement('div')
-        elementRight.className = 'right'
-        var header = document.createElement('p')
-        header.className = 'search-header'
-        header.innerHTML = result.title
-        elementRight.appendChild(header)
-        var content = document.createElement('p')
-        content.className = 'search-content'
-        content.innerHTML = result.content
-        elementRight.appendChild(content)
-        element.onmouseup = function () {
-            return trackSearch(searchBoxElement.value.trim(), i, false)
+        var searchResult = document.createElement('div')
+        var searchTitle = document.createElement('p')
+        searchTitle.className = 'search-title'
+        searchTitle.innerHTML = result.documentTitle || '{{ site.title }}'
+        searchResult.appendChild(searchTitle)
+        var searchSubtitle = document.createElement('p')
+        searchSubtitle.className = 'search-subtitle'
+        searchSubtitle.innerHTML = result.title
+        searchResult.appendChild(searchSubtitle)
+        var searchContent = document.createElement('p')
+        searchContent.className = 'search-content'
+        searchContent.innerHTML = result.content
+        searchResult.appendChild(searchContent)
+        element.onmouseup = function() {
+            // To log which result user click, add track code here
         }
-        element.appendChild(elementLeft)
-        element.appendChild(elementRight)
+        element.appendChild(searchResult)
         return element
     }
 
     formatResult = function (result) {
         var content = null
         var title = result._source.title
+        var url = result._source.url;
+        var documentTitle = result._source.documentTitle;
         var regex = /<mark>(.*?)<\/mark>/g
         var joinHighlights = function (str) {
             if (str) {
@@ -320,8 +316,6 @@
                 title = joinHighlights(result.highlight.title[0])
             }
         }
-        var url = result._source.url;
-        var documentTitle = result._source.documentTitle;
         return {
             url: url,
             content: content ? '...' + content + '...' : '',
@@ -461,10 +455,12 @@
     var lunrSearch = function (query) {
         // Add wildcard before and after
         var queryTerm = refineLunrSearchQuery(query)
-        var lunrResults = lunrIndex.search(queryTerm)
-        var results = translateLunrResults(lunrResults)
-        highlightBody()
-        renderSearchResultsFromLunr(results)
+        if (lunrIndex !== null) {
+            var lunrResults = lunrIndex.search(queryTerm)
+            var results = translateLunrResults(lunrResults)
+            highlightBody()
+            renderSearchResultsFromLunr(results)
+        }
     }
 
     var refineLunrSearchQuery = function(query) {
@@ -484,7 +480,6 @@
             }           
             return term
         })
-        console.log(terms)
         return terms.join(' ')
     }
 
@@ -500,12 +495,12 @@
         }
         searchResults.classList.add('visible')
 
-        if (searchSetOffline === true) {
+        if (searchSetOffline) {
             lunrSearch(query)
         } else {
             esSearch(query)
-            if (env === 'production' && ga) {
-                ga('send', 'pageview', '/search?query=' + encodeURIComponent(query))
+            if (env === 'production' && window.ga) {
+                window.ga('send', 'pageview', '/search?query=' + encodeURIComponent(query))
             }
         }
     }

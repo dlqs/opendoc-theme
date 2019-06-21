@@ -9,10 +9,10 @@
   border: 1px solid $divider-color;
   border-radius: 4px;
   overflow: hidden;
-  z-index: 10000;
+  z-index: $toolbar-z-index;
   flex-shrink: 0;
   right: $large-spacing;
-  top: calc(50% - (#{$toolbar-container-height} / 2));
+  top: calc(#{$site-doc-header-height} + (2 * #{$block-spacing}));
   transition: top 0.3s;
 
   .toolbar-button {
@@ -83,7 +83,6 @@
       display: none;
     }
   }
-
   // For mobile menu
   @include mobile-screen {
     right: 0;
@@ -130,6 +129,154 @@
 @include mobile-screen {
   body.menu-toggled #menu-toggle-btn {
     background: $header-text-color;
+  }
+}
+
+// Floating action button
+// ----------------------
+$max-child-actions: 4;
+$transition-duration: 0.4s;
+
+.fab {
+  position: fixed;
+  bottom: $med-spacing;
+  right: $med-spacing;
+  text-align: center;
+  z-index: $fab-z-index;
+  font-family: Arial, Helvetica, sans-serif;
+
+  @include desktop-screen {
+    display: none;
+  }
+
+  .trigger,
+  .action {
+    @include flex-center();
+    user-select: none;
+    border-radius: 50%;
+    box-shadow: 4px 4px 4px 2px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+
+    &:active {
+      box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .trigger {
+    position: relative;
+    background: $primary-brand-color;
+    height: $fab-button-size;
+    width: $fab-button-size;
+    z-index: $fab-trigger-z-index;
+    img.close {
+      display: none;
+    }
+  }
+
+  .overlay {
+    position: fixed;
+    height: $fab-button-size;
+    width: $fab-button-size;
+    background: black;
+    opacity: 0;
+    border-radius: 50%;
+    transition: all $fab-transtition-duration ease-out;
+    right: $med-spacing;
+    bottom: $med-spacing;
+  }
+
+  .action {
+    position: absolute;
+    top: 0;
+    margin: 0;
+    opacity: 0;
+    background: $divider-color;
+    height: $fab-button-size;
+    width: $fab-button-size;
+    transition: transform $fab-transtition-duration ease, opacity $fab-transtition-duration/3 ease-out;
+    img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .actions {
+    transition: opacity $fab-transtition-duration ease;
+  }
+
+  &.open {
+    .actions {
+      $action-space: $fab-button-size + $spacing;
+      opacity: 1;
+
+      @for $i from 1 through $max-child-actions {
+        $distance: $action-space * $i;
+        .action:nth-child(#{$i}) {
+          transform: translateY(-$distance);
+          transition: transform $fab-transtition-duration ease,
+            opacity $fab-transtition-duration ease-in $fab-transtition-duration/3;
+          opacity: 1;
+        }
+      }
+    }
+
+    .overlay {
+      opacity: 0.8;
+      height: calc(100vw + 100vh);
+      width: calc(100vw + 100vh);
+      bottom: -50vh;
+      right: -50vw;
+    }
+
+    .trigger {
+      img.close {
+        display: flex;
+      }
+      img {
+        display: none;
+      }
+    }
+
+    .tooltip {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+      right: $fab-button-size + $spacing;
+      transition-delay: $fab-transtition-duration/2;
+    }
+  }
+
+  .tooltip {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: $divider-color;
+    background-color: rgba(39, 46, 54, 0.8);
+    transform: translateY(-50%) scale(0);
+    transform-origin: right center 0;
+    text-align: right;
+    transition: all $transition-duration ease;
+    opacity: 0;
+    white-space: nowrap;
+    width: auto;
+    border-radius: 5px;
+    font-family: $base-font-family;
+    border: 1px solid $divider-color;
+  }
+}
+
+// Hide on first page
+// -----------------
+@include desktop-screen {
+  .index .toolbar-container {
+    display: none;
+  }
+}
+
+@include mobile-screen {
+  .index .fab {
+    display: none;
   }
 }
 

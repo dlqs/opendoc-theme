@@ -9,6 +9,7 @@
     var navigation = document.getElementsByClassName('navigation')[0]
     var searchFilter = document.getElementsByClassName('search-filter')[0]
     var searchBoxElement = document.getElementById('search-box')
+    var indexDiv = document.getElementById('index-div')
 
     // If subfolder was accessed directory via url, load the subfolder's pages
     if (documentTitle && documentTitle.innerText.trim()) {
@@ -36,13 +37,18 @@
                 loadDocumentContent(directoryTitle, 1)
             }
         }, true)
+
+        /*
+         Uncomment this to preload all pages in the background
+         -----------------------------------------------------
+         */
         // Load pages in background based on directory order
-        var directoryTitle = directory.innerText.trim()
-        loadDocumentContent(directoryTitle, 0)
+        // var directoryTitle = directory.innerText.trim()
+        // loadDocumentContent(directoryTitle, 0)
     })
 
     // Returns whether corresponding toc is found and displays it
-    var showToc = function (tocId) {
+    function showToc(tocId) {
         var correspondingToc = document.getElementById(tocId)
         if (correspondingToc) {
             document.querySelectorAll('.contents').forEach(function (toc) {
@@ -63,7 +69,7 @@
     }
 
     //  Nav bar expansion and selection
-    var setSelectedAnchor = function () {
+    function setSelectedAnchor() {
         var path = window.location.pathname
         var hash = window.location.hash
 
@@ -114,11 +120,6 @@
             event.preventDefault()
             event.stopPropagation()
             if (anchor.hash.length > 0) {
-                if ((window.location.pathname + window.location.hash).endsWith(anchor.hash)) {
-                    // If clicked on the same anchor, just scroll to view
-                    scrollToView()
-                    return
-                }
                 window.location = anchor.hash
             } else {
                 window.location = '#'
@@ -130,40 +131,56 @@
 
     // Event when path changes
     // =============================================================================
-    var onHashChange = function (event) {
+    function onHashChange(firstLoad) {
         var path = window.location.pathname
         var page = pageIndex[path]
         // Only reflow the main content if necessary
-        if (page) {
-            var tocId = 'toc_' + page.dir.replace(/\s/g, '_')
-            showToc(tocId)
-            setSelectedAnchor()
-            loadPageContent(page, 2).then(function (pageContent) {
-                /* 
-                 *  Search filter disabled, uncomment to enable
-                */
-                // setSearchFilter(page)
-                // Don't compare iframes
-                if (main.innerHTML.trim().replace(/\<iframe.*\<\/iframe\>/g, '') !== pageContent.trim().replace(/\<iframe.*\<\/iframe\>/g, '')) {
-                    main.innerHTML = pageContent
-                    document.title = page.title
-                    documentTitle.innerText = page.documentInfo[0] // document title
-                    documentSubtitle.innerText = page.documentInfo[1] // document subtitle
-                    docHeader.classList.remove('index')
+        if (!page) {
+            return
+        }
+        showToc(page.tocId)
+        setSelectedAnchor()
+        if (firstLoad) {
+            return
+        }
+        loadPageContent(page, 2).then(function (pageContent) {
+            /* 
+            *  Search filter disabled, uncomment to enable
+            */
+            // setSearchFilter(page)
+            // Don't compare iframes
+            if (main.innerHTML.trim().replace(/\<iframe.*\<\/iframe\>/g, '') !== pageContent.trim().replace(/\<iframe.*\<\/iframe\>/g, '')) {
+                main.innerHTML = pageContent
+                document.title = page.title
+                documentTitle.innerText = page.documentInfo[0] // document title
+                documentSubtitle.innerText = page.documentInfo[1] // document subtitle
+                if (indexDiv) {
+                    indexDiv.classList.remove('index')
                 }
-                // Make sure it is scrolled to the anchor
-                scrollToView()
+            }
+            scrollAnchorIntoView()
 
-                // Hide menu if sub link clicked or clicking on search results        
-                if (window.location.hash.replace('#', '').length > 0 || navigation.classList.contains('hidden')) {
-                    window.dispatchEvent(new Event('link-click'))
-                }
-                highlightBody()
-            })
+            // Hide menu if sub link clicked or clicking on search results        
+            if (window.location.hash.replace('#', '').length > 0 || navigation.classList.contains('hidden')) {
+                window.dispatchEvent(new Event('link-click'))
+            }
+            highlightBody()
+        })
+    }
+
+    function scrollAnchorIntoView() {
+        if (window.location.hash) {
+            var anchorEl = document.querySelector(window.location.hash)
+            if (anchorEl) {
+                // When page is rendered by assigning to innerHTML, it does not scroll to anchor.
+                // scrollIntoView(true) aligns anchor to top of page
+                anchorEl.scrollIntoView(true)
+            }
         }
     }
 
-    var setSearchFilter = function (page) {
+    // Search filter disabled, not in use
+    function setSearchFilter(page) {
         if (tod) {
             searchFilter.innerText = page.documentInfo[0] // document title
             searchFilter.classList.remove('hidden')
@@ -171,25 +188,13 @@
         }
     }
 
-    var scrollToView = function () {
-        var id = window.location.hash.replace('#', '')
-        // minus 1 to hide the border on top
-        if (id.length > 0) {
-            var anchor = document.getElementById(id)
-        }
-        if (anchor) {
-            var topOffset = siteHeader.offsetHeight
-            if (!isMobileView()) {
-                topOffset += docHeader.clientHeight
-            }
-            var top = anchor.offsetTop - topOffset
-            window.scrollTo(0, top)
-        }
-    }
-
     // Dont use onpopstate as it is not supported in IE
-    window.addEventListener('hashchange', onHashChange)
+    window.addEventListener('hashchange', function () {
+        onHashChange()
+    })
 
     // Scroll to view onload
-    window.onload = onHashChange
+    window.onload = function () {
+        onHashChange(true)
+    }
 })()
