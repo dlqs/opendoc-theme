@@ -26,10 +26,11 @@ self.addEventListener('message', function (event) {
     if (event.data === 'appinstalled') {
         event.waitUntil(
             caches.open(CACHE_NAME).then(function (cache) {
-                cache.addAll(urlsToCache)
-                setTimeout(function() {
-                    return event.ports[0].postMessage('done')
-                }, 1000)
+                return cache.addAll(urlsToCache).then(function () {
+                    setTimeout(function() {
+                        return event.ports[0].postMessage('done')
+                    }, 1000)
+                })
             }).catch(function (error) {
                 return error
             }))
