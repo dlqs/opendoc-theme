@@ -19,7 +19,7 @@ urlsToCache.push("{{ page.url }}");
 {% endif %}
 {% endfor %}
 
-var CACHE_NAME = '{{ site.title | slugify }}-cache-v4'
+var CACHE_NAME = '{{ site.title | slugify }}-cache-v1'
 console.log(urlsToCache)
 
 self.addEventListener('message', function (event) {
@@ -27,7 +27,9 @@ self.addEventListener('message', function (event) {
         event.waitUntil(
             caches.open(CACHE_NAME).then(function (cache) {
                 cache.addAll(urlsToCache)
-                return event.ports[0].postMessage('done')
+                setTimeout(function() {
+                    return event.ports[0].postMessage('done')
+                }, 1000)
             }).catch(function (error) {
                 return error
             }))
