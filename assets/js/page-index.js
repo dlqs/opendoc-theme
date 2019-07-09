@@ -10,7 +10,6 @@
     var pages = [
         {%- for site_page in site.html_pages -%}
             {%- unless site_page.exclude -%}
-            {%- unless site_page.name == 'index.html' or site_page.name == 'index.md' -%}
             {%- capture name -%}{{ site_page.name }}{%- endcapture -%}
             {%- if site_page.title == null -%}
             {%- capture title %}{%- assign words  = name | remove_first: '.md' | split: '-' -%}{%- for word in words -%}{{ word | capitalize }} {%- endfor -%}{%- endcapture -%}
@@ -28,12 +27,11 @@
                 name: {{name | jsonify}},
                 title: {{title | jsonify}},
                 url: {{ site_page.url | relative_url | jsonify }},
-                nobase_url: {{ site_page.url | jsonify}},
+                escapedPath: {{ site_page.path | uri_escape | jsonify}},
                 dir: {{ site_page.dir | jsonify }},
                 tocId: {{ 'toc_' | append: toc_id | jsonify }},
                 documentInfo: {% include_cached document-title.txt dir=site_page.dir %}
             },
-            {% endunless %}
             {% endunless %}
         {% endfor %}
     ]

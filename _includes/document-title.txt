@@ -36,7 +36,6 @@
 {%- else -%}
 {%- assign document_info = document_info | push: page_info.title -%}
 {%- endif -%}
-
 {%- assign document_info = document_info | push: page_info.subtitle -%}
 {%- assign document_info = document_info | push: page_info.order -%}
 {%- endif -%}

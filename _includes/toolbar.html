@@ -5,24 +5,38 @@
         <img class="btn-icon hover" src="{{ '/assets/images/sidebar-hover.svg' | relative_url }}">
         <img class="mobile-btn-icon " src="{{ '/assets/images/menu.svg' | relative_url }}">
         <img class="mobile-btn-icon close" src="{{ '/assets/images/x-mobile.svg' | relative_url }}">
+        <div class="tooltip">Toggle Sidebar</div>
     </label>
     <div class="toolbar-button print-btn">
         <img class="btn-icon" src="{{ '/assets/images/pdf.svg' | relative_url }}">
         <img class="btn-icon hover" src="{{ '/assets/images/pdf-hover.svg' | relative_url }}">
+        <div class="tooltip">Save as PDF</div>
     </div>
     <div class="toolbar-button edit-btn">
         <img class="btn-icon" src="{{ '/assets/images/github.svg' | relative_url }}">
         <img class="btn-icon hover" src="{{ '/assets/images/github-hover.svg' | relative_url }}">
+        <div class="tooltip">View on Github</div>
     </div>
 </div>
 
 <div class="fab no-print" id="fab">
-    <div class="overlay"></div>
-    <div class="trigger">
+    <div class="overlay" id="fab-overlay"></div>
+    <div class="back-to-top hidden" id="back-to-top" href="#">
+        <img class="btn-icon" src="{{ '/assets/images/chevron-up-white.svg' | relative_url }}">
+    </div>
+    <div class="trigger" id="fab-trigger">
         <img class="btn-icon" src="{{ '/assets/images/vertical-dots.svg' | relative_url }}">
         <img class="btn-icon close" src="{{ '/assets/images/x-mobile.svg' | relative_url }}">
     </div>
     <div class="actions">
+        {%- assign feedback_url = 'https://form.gov.sg/5cee3d46138e3200109244df' -%}
+        {%- if site.styling_options.feedback_url and site.styling_options.feedback_url != '' -%}
+            {%- assign feedback_url = site.styling_options.feedback_url -%}
+        {%- endif -%}
+        <a class="action feedback-btn" href="{{ feedback_url }}" target="_blank">
+            <img class="btn-icon" src="{{ '/assets/images/feedback.svg' | relative_url }}">
+            <div class="tooltip">Feedback</div>
+        </a>
         <div class="action share-btn">
             <img class="btn-icon" src="{{ '/assets/images/share.svg' | relative_url }}">
             <div class="tooltip">Share</div>
@@ -33,7 +47,7 @@
         </div>
         <div class="action edit-btn">
             <img class="btn-icon" src="{{ '/assets/images/github.svg' | relative_url }}">
-            <div class="tooltip">Edit on Github</div>
+            <div class="tooltip">View on Github</div>
         </div>
     </div>
 </div>

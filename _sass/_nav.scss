@@ -3,16 +3,16 @@
 .site-nav {
   // Position
   position: fixed;
-  top: $mobile-site-header-height;
+  top: 0;
   z-index: $mobile-navigation-z-index;
 
   // Sidebar content could be too long for the page
   // The scrolling should be limited to the chapter selection area
-  overflow: hidden;
+  overflow: visible;
   display: flex;
   box-sizing: border-box;
-  height: 100%;
-  background-color: $base-background-color;
+  // hide this background div
+  height: 0;
   flex-direction: column;
 
   // Mobile has the sidebar hidden by default
@@ -21,13 +21,9 @@
   transition-duration: $site-nav-collapse-duration;
   transition-timing-function: $site-nav-collapse-timing;
   transition-property: left, width;
-  left: -100vw;
   width: 100vw;
-  body.menu-toggled & {
-    left: 0;
-    box-shadow: $site-nav-shadow-outset;
-  }
   @include desktop-screen {
+    height: 100%;
     z-index: $desktop-navigation-z-index;
     width: $site-nav-width;
     max-width: $max-site-nav-width;
@@ -35,7 +31,6 @@
     left: 0;
     body.menu-toggled & {
       left: -#{$site-nav-width};
-      right: unset;
       box-shadow: none;
     }
   }
@@ -43,7 +38,6 @@
   @include large-screen {
     body.menu-toggled & {
       left: -#{$max-site-nav-width};
-      right: unset;
       box-shadow: none;
     }
   }
@@ -53,6 +47,7 @@
     width: $back-to-docs-width;
     border-right: $divider-color 1px solid;
     white-space: nowrap;
+    box-sizing: border-box;
     cursor: pointer;
 
     p {
@@ -79,6 +74,22 @@
         padding-right: $large-spacing;
       }
     }
+
+    @include mobile-screen {
+      width: $mobile-back-to-docs-width;
+      p {
+        height: $mobile-back-to-docs-width;
+        line-height: $mobile-back-to-docs-width;
+      }
+    }
+  }
+
+  @mixin hover-state-bg {
+    background-color: $nav-background-hover-color;
+  }
+
+  @mixin hover-state-text {
+    color: $header-text-color;
   }
 
   .navigation {
@@ -117,26 +128,24 @@
 
         .tod-container {
           flex: 1;
-          padding-left: $back-to-docs-width;
+          padding-left: $site-padding;
           &:hover {
-            color: $primary-text-color;
+            @include hover-state-bg;
             text-decoration: none;
+            .directory-item {
+              @include hover-state-text;
+            }
           }
         }
 
+        // TOD directory item
         .directory-item {
-          color: $secondary-text-color;
-          border-bottom: 1px inset $well-background-color;
-          padding: $spacing 0;
+          color: $nav-text-color;
+          border-bottom: 1px inset $border-color;
+          padding: $med-spacing 0;
           font-size: $nav-font-size;
           padding-right: $small-spacing;
-        }
-
-        &:hover a {
-          background-color: $well-background-color;
-          .directory-item {
-            color: $primary-text-color;
-          }
+          line-height: 1.5;
         }
 
         &:last-child {
@@ -160,7 +169,7 @@
       overflow: auto;
 
       @include mobile-screen {
-        max-height: calc(100vh - #{$mobile-site-doc-header-height});
+        max-height: calc(100vh - #{$mobile-site-header-height});
       }
     }
 
@@ -177,11 +186,12 @@
   .contents.lonely {
     .nav-branch {
       .nav-link {
-        padding-left: calc(1.5 * #{$large-spacing});
+        padding-left: $site-padding;
       }
       & .nav-branch {
-        margin-left: calc(1.5 * #{$large-spacing});
-        padding-left: $search-box-height;
+        margin-left: $site-padding;
+        // Align expanded sublinks to logo
+        padding-left: calc(#{$back-to-docs-width} - #{$site-padding} - 1px);
       }
     }
   }
@@ -189,25 +199,38 @@
   .nav-branch {
     position: relative;
     display: flex;
-    flex-direction: row;
+
+    // Hide margin bottom for last child
+    &:last-child {
+      border-bottom: none;
+      margin-bottom: $large-spacing;
+    }
+
+    // Show sublinks if only page
+    &:only-child {
+      .nav-branch {
+        display: block;
+      }
+    }
 
     .nav-link {
       font-size: $nav-font-size;
       padding-left: $large-spacing;
-      color: $secondary-text-color;
+      color: $nav-text-color;
       display: block;
 
       &:hover {
-        text-decoration: none;
-        color: $primary-text-color;
-        background-color: $well-background-color;
+        @include hover-state-text;
+        @include hover-state-bg;
       }
 
+      // TOC directory item
       .directory-item {
         border-bottom: 1px solid $well-background-color;
         padding: $spacing $large-spacing $spacing 0;
         display: inline-block;
         width: calc(100% - #{$large-spacing});
+        line-height: 1.5;
       }
     }
 
@@ -223,6 +246,7 @@
 
         &:hover,
         &.selected {
+          font-weight: normal;
           color: $primary-brand-color;
         }
 
@@ -245,11 +269,6 @@
       }
     }
 
-    &:last-child {
-      border-bottom: none;
-      margin-bottom: $large-spacing;
-    }
-
     // Expanded main links
     &.expanded {
       & > .nav-link {
@@ -263,17 +282,35 @@
   }
 
   .nav-header {
-    height: $doc-header-height - 1px;
+    height: $mobile-site-header-height;
     background-color: $search-box-background-color;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: calc(100% - #{$mobile-site-header-height});
+
+    // Splitting up header and main
+    position: fixed;
+    left: 100vw;
+    transition-duration: $site-nav-collapse-duration;
+    transition-timing-function: $site-nav-collapse-timing;
+    transition-property: left;
+    z-index: 1;
+
+    body.search-toggled &,
+    body.menu-toggled & {
+      left: 0;
+    }
+
     @include desktop-screen {
       border-bottom: 1px solid $divider-color;
+      width: 100%;
+      position: static;
+      height: $doc-header-height;
     }
 
     .search-filter {
-      border-radius: 4px;
+      border-radius: $base-border-radius;
       background: $header-text-color;
       color: white;
       font-size: 9px;
@@ -314,10 +351,40 @@
         align-items: center;
         justify-content: center;
 
-        .search-icon {
-          display: block;
-          height: 30px;
+        .search-icon,
+        .close-icon {
+          height: 24px;
           width: auto;
+          display: none;
+          @include mobile-only();
+        }
+
+        .search-icon:not(.mobile) {
+          height: 30px;
+          @include desktop-only();
+        }
+
+        @include mobile-screen {
+          cursor: pointer;
+          width: $mobile-site-header-height;
+          min-width: $mobile-site-header-height;
+          background-color: transparent;
+
+          body.menu-toggled & {
+            cursor: default;
+            .close-icon {
+              display: none;
+            }
+          }
+
+          body.search-toggled:not(.menu-toggled) & {
+            .close-icon {
+              display: block;
+            }
+            .search-icon {
+              display: none;
+            }
+          }
         }
       }
 
@@ -328,7 +395,7 @@
         display: none;
         align-items: center;
         justify-content: center;
-        margin-right: $spacing;
+        margin-right: $med-spacing;
         background-color: $well-background-color;
         border-radius: 50%;
 
@@ -348,9 +415,12 @@
           }
         }
       }
+      &.focused {
+        background: white;
+      }
+
       &.filled {
         background: rgba(255, 255, 255, 0.75);
-
         .clear-button {
           display: flex;
           cursor: pointer;
@@ -371,14 +441,20 @@
         min-width: 0;
         overflow: visible;
 
+        @include mobile-screen {
+          padding-left: 0;
+        }
+
         .search-header {
           font-size: 9px;
           letter-spacing: 1.1px;
           color: $header-text-color;
           opacity: 0.7;
           margin: 0;
-          margin-bottom: 8px;
+          margin-bottom: 2px;
           text-transform: uppercase;
+
+          @include desktop-only();
         }
 
         input {
@@ -386,7 +462,7 @@
           min-width: 0;
           border: none;
           outline: none;
-          color: black;
+          color: $primary-text-color;
           opacity: 0.5;
           padding: 0;
           margin: 0;
@@ -408,12 +484,28 @@
   }
 
   .nav-main {
-    height: calc(100% - #{$doc-header-height});
-    overflow: hidden; // preven double scroll bar
+    height: calc(100% - #{$mobile-site-header-height});
+    overflow: hidden; // prevent double scroll bar
     background-color: $base-background-color;
     overscroll-behavior: contain;
 
+    // Splitting up header and main
+    position: fixed;
+    bottom: 0;
+    left: 100vw;
+    transition-duration: $site-nav-collapse-duration;
+    transition-timing-function: $site-nav-collapse-timing;
+    transition-property: left;
+
+    @include mobile-screen {
+      width: 100%;
+      body.menu-toggled & {
+        left: 0;
+      }
+    }
+
     @include desktop-screen {
+      position: static;
       height: calc(100% - #{$doc-header-height});
       border-right: 1px solid $divider-color;
       box-shadow: $site-nav-shadow-inset;
@@ -437,15 +529,14 @@
     border-top: none;
 
     @include mobile-screen {
-      max-height: calc(100vh - #{$mobile-site-doc-header-height});
+      max-height: calc(100vh - #{$mobile-site-header-height});
+      top: $mobile-site-header-height;
+      left: 0;
+      width: 100vw;
     }
 
     &.visible {
       display: block;
-    }
-
-    &.hidden {
-      display: none !important;
     }
 
     //not-found search results{

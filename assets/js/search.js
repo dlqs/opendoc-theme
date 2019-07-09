@@ -21,12 +21,20 @@
     }
 
     searchBoxElement.onfocus = function () {
-        searchResults.classList.remove('hidden')
+        siteSearchElement.classList.add('focused')
+        if (siteSearchElement.classList.contains('filled')) {
+            searchResults.classList.add('visible')
+        }
+    }
+
+    searchBoxElement.onblur = function() {
+        siteSearchElement.classList.remove('focused')
     }
 
     document.body.addEventListener('click', function (event) {
-        if (event.target.id !== 'search-box') {
-            searchResults.classList.add('hidden')
+        var target = event.target
+        if (target.id !== 'search-box' && !target.classList.contains('search-btn') && !target.parentNode.classList.contains('search-btn')) {
+            searchResults.classList.remove('visible')
         }
     })
 
@@ -68,7 +76,7 @@
     // Begin Lunr Indexing
     // =============================================================================
     function getLunrIndex() {
-        return fetch('/assets/lunrIndex.json')
+        return fetch('{{ "/assets/lunrIndex.json" | relative_url }}')
             .then(function (res) {
                     return res.json()
             })
@@ -206,6 +214,7 @@
     // Takes an array of objects with "title" and "content" properties
     var renderSearchResultsFromLunr = function (searchResults) {
         var container = document.getElementsByClassName('search-results')[0]
+        container.scrollTop = 0
         container.innerHTML = ''
         if (!searchResults || searchResults.length === 0) {
             var error = generateErrorHTML()
@@ -220,6 +229,7 @@
 
     var renderSearchResultsFromServer = function (searchResults) {
         var container = document.getElementsByClassName('search-results')[0]
+        container.scrollTop = 0
         container.innerHTML = ''
         if (typeof searchResults.hits === 'undefined') {
             var error = document.createElement('p')
@@ -272,7 +282,7 @@
         searchContent.innerHTML = result.content
         searchResult.appendChild(searchContent)
         element.onmouseup = function() {
-            // To log which result user click, add track code here
+            searchResults.classList.remove('visible')
         }
         element.appendChild(searchResult)
         return element
@@ -522,7 +532,6 @@
 
     clearSearchFilter = function () {
         searchFilter.classList.add('hidden')
-        searchBoxElement.placeholder = 'Search opendoc'
     }
 
     searchFilter.onclick = clearSearchFilter

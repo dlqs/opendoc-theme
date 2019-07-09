@@ -44,16 +44,12 @@
     var editButtons = document.querySelectorAll('.edit-btn')
     editButtons.forEach(function (btn) {
         btn.addEventListener('click', function () {
-            var repoUrl = '{{ site.github.repository_url }}' + '/blob/master'
+            var repoUrl = '{{ site.github.repository_url }}' + '/blob/master/'
             var page = pageIndex[window.location.pathname]
-            var pageUrl = page ? page['nobase_url'] : null
-            var pageName = page ? page.name : null
-            if (pageUrl && pageName) {
+            var pageUrl = page ? page.escapedPath : null
+            if (pageUrl) {
                 console.log('opening:', pageUrl)
-                var markdownUrl = pageUrl.split('/')
-                markdownUrl[markdownUrl.length - 1] = pageName
-                markdownUrl = markdownUrl.join('/')
-                repoUrl += markdownUrl
+                repoUrl += pageUrl
             }
             window.open(repoUrl, '_blank')
         })
@@ -80,17 +76,55 @@
                     text: document.title,
                     url: window.location.href
                 }).then()
-            } else {
-                alert(navigator.share)
             }
         })
     })
 
     // Floating Action Button
     // -----------------------
+    var floatingActionButtonTrigger = document.getElementById('fab-trigger')
     var floatingActionButton = document.getElementById('fab')
-    floatingActionButton.addEventListener('click', function () {
+    floatingActionButtonTrigger.addEventListener('click', function () {
         floatingActionButton.classList.toggle('open')
     });
 
+    var fabOverlay = document.getElementById('fab-overlay')
+    fabOverlay.addEventListener('click', function() {
+        floatingActionButton.classList.remove('open')
+    })    
+
+    var backToTopButton = document.getElementById('back-to-top')
+    backToTopButton.addEventListener('click', function() {
+        // jump.js
+        Jump(-(window.pageYOffset || document.documentElement.scrollTop), {
+            duration: 300
+        })
+    })
+
+    // show/hide back-to-top button on scroll and on load
+    function scrollListener() {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop
+        if (scrollTop > (window.innerHeight * 2)) {
+            backToTopButton.classList.remove('hidden')
+        } else {
+            backToTopButton.classList.add('hidden')
+        }
+    }
+
+    scrollListener()
+
+    window.addEventListener("scroll", scrollListener)
+
+    //  Search Button for mobile 
+    // --------------------------
+    var searchButtons = document.querySelectorAll('.search-btn')
+    var searchBoxElement = document.getElementById('search-box')
+    searchButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.body.classList.toggle('search-toggled')
+            if (document.body.classList.contains('search-toggled')) {
+                searchBoxElement.focus()
+            }
+        })
+    })
 })()

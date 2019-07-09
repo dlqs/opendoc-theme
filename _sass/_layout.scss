@@ -3,9 +3,11 @@
 body {
   -webkit-overflow-scrolling: touch;
   overflow-x: hidden;
+  box-sizing: border-box;
 
   mark {
     font-weight: bold;
+    background-color: $highlight-color;
   }
   @include mobile-screen {
     &.menu-toggled {
@@ -39,14 +41,14 @@ body {
   }
 
   @include mobile-screen {
-    padding: 0 $large-spacing;
+    padding: 0 $spacing 0 $large-spacing;
     height: $mobile-site-header-height;
     right: $mobile-site-header-height;
   }
 
   .site-header-left {
     display: flex;
-    align-items: center;
+    align-items: baseline;
 
     .site-header-text {
       color: $primary-brand-color;
@@ -57,8 +59,9 @@ body {
 
     .site-last-updated {
       margin: 0;
-      color: $secondary-text-color;
-      font-size: 12px;
+      font-size: 11px;
+      letter-spacing: 0.6px;
+      color: $subheader-text-color;
       margin-left: $large-spacing;
     }
 
@@ -80,24 +83,12 @@ body {
       letter-spacing: 1px;
       text-transform: uppercase;
 
-      .btn-icon {
-        display: none;
-      }
-
       span {
         text-decoration: none;
       }
 
       @include mobile-screen {
-        margin-right: 0;
-
-        span {
-          display: none;
-        }
-
-        .btn-icon {
-          display: block;
-        }
+        display: none;
       }
     }
 
@@ -111,14 +102,30 @@ body {
       max-height: 44px;
     }
 
+    .top-mobile-btn {
+      display: none;
+    }
+
     @include mobile-screen {
-      flex-direction: row-reverse;
-      justify-content: space-between;
+      // Uncomment if u wanna put another button in the mobile header
+      // flex-direction: row-reverse;
+      // justify-content: space-between;
       width: 100%;
+      justify-content: space-between;
 
       .agency-logo {
         max-width: 150px;
         max-height: 30px;
+      }
+
+      .top-mobile-btn {
+        @include flex-center();
+        width: $mobile-site-header-height;
+        height: $mobile-site-header-height;
+        cursor: pointer;
+        img {
+          height: 24px;
+        }
       }
     }
   }
@@ -232,7 +239,7 @@ body {
   left: 0;
   right: 0;
   top: 0;
-  padding-top: 0;
+  padding-top: $mobile-site-doc-header-height;
   padding-left: $large-spacing;
   padding-right: $large-spacing;
   padding-bottom: $spacing;
@@ -250,7 +257,7 @@ body {
   // Expand to fill when the menu is closed
   @include desktop-screen {
     left: $site-nav-width;
-    padding-top: 0;
+    padding-top: $site-doc-header-height;
     padding-left: $desktop-spacing;
     padding-right: $desktop-spacing + $body-sidebar-right-padding;
     padding-bottom: $large-spacing;
@@ -276,7 +283,7 @@ body {
   }
 
   h1 {
-    padding-top: calc(1.6 * #{$block-spacing} + #{$mobile-site-doc-header-height});
+    padding-top: calc(1.6 * #{$block-spacing});
   }
   h2 {
     padding-top: calc(1.4 * #{$block-spacing} + #{$mobile-site-header-height});
@@ -294,19 +301,30 @@ body {
     padding-top: calc(0.6 * #{$block-spacing} + #{$mobile-site-header-height});
   }
   a {
-    padding-top: $mobile-site-header-height;
+    text-decoration: underline;
+    // This css part looks complicated but is required to prevent highlighting
+    // text with inline links to include padding-top
+    &[href*="#"]:before {
+      display: inline;
+      content: "";
+      text-decoration: none;
+      position: relative;
+      top: -$mobile-site-header-height;
+      visibility: hidden;
+    }
   }
+
   h2,
   h3,
   h4,
   h5,
-  h6,
-  a {
+  h6 {
     margin-top: -$mobile-site-header-height;
   }
+
   @include desktop-screen {
     h1 {
-      padding-top: calc(2 * #{$block-spacing} + #{$site-doc-header-height});
+      padding-top: calc(2 * #{$block-spacing});
     }
     h2 {
       padding-top: calc(1.8 * #{$block-spacing} + #{$site-doc-header-height});
@@ -323,15 +341,14 @@ body {
     h6 {
       padding-top: calc(1 * #{$block-spacing} + #{$site-doc-header-height});
     }
-    a {
-      padding-top: $site-doc-header-height;
+    a[href*="#"]:before {
+      top: -$site-doc-header-height;
     }
     h2,
     h3,
     h4,
     h5,
-    h6,
-    a {
+    h6 {
       margin-top: calc(-1 * #{$site-doc-header-height});
     }
   }
@@ -341,28 +358,27 @@ body {
   position: relative;
   padding-top: $large-spacing;
   padding-bottom: $large-spacing;
-  font-size: calc(#{$base-font-size} - 6px);
+  font-size: calc(#{$base-font-size} - 5px);
   color: $secondary-text-color;
-  opacity: 0.5;
-  text-align: right;
-  width: calc(100vw - #{$large-spacing});
+  text-align: center;
   transition-duration: $site-nav-collapse-duration;
   transition-timing-function: $site-nav-collapse-timing;
-  a {
-    font-size: calc(#{$base-font-size} - 6px);
-    color: $primary-brand-color;
+  a img {
+    height: 16px;
+    margin-bottom: -3px;
+    cursor: pointer;
   }
 
   @include desktop-screen {
-    width: calc(100vw - #{$body-sidebar-right-padding} - #{$body-padding});
-    font-size: calc(#{$base-font-size} - 4px);
-
-    a {
-      font-size: calc(#{$base-font-size} - 4px);
+    padding-left: $site-nav-width;
+    padding-right: $body-sidebar-right-padding;
+    font-size: calc(#{$base-font-size} - 3px);
+    a img {
+      height: 18px;
     }
-    body.menu-toggled & {
-      width: calc(100vw - #{$body-sidebar-right-padding} - #{$body-full-view-padding});
-    }
+  }
+  body.menu-toggled & {
+    padding-left: 0;
   }
 }
 
