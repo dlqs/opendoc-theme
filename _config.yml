@@ -16,8 +16,8 @@ offline_search_only: false
 
 subtitle: this is a subtitle
 order:
-  - contribute.md
-  - import-files.md
+  - 1.md
+  - 2.md
 
 google_analytics: 'UA-113717369-5'
 styling_options:
