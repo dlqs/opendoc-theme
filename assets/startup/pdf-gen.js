@@ -211,7 +211,6 @@ const createPdf = (htmlFilePaths, outputFolderPath, documentName) => {
                 method: 'HEAD'
             }
             const pdfExistsRequest = https.request(pdfS3Url, options, function (res) {
-                console.log(res.statusCode)
                 if (res.statusCode === 404) {
                     return reject('PDF not present')
                 }
@@ -262,7 +261,7 @@ const createPdf = (htmlFilePaths, outputFolderPath, documentName) => {
                     pdfCreationRequest.write(JSON.stringify(pdfCreationBody))
                     pdfCreationRequest.end()
                 }).catch((error) => {
-                    logErrorPdf('Request promise ', error)
+                    logErrorPdf(`pdfCreation promise error for ${pdfName}`, error)
                 }).finally(() => {
                     exportDom.window.close()
                 })
