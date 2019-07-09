@@ -5,12 +5,11 @@ plugins:
   - jekyll-include-cache
 baseurl: ''
 kramdown:
-  auto_id_stripping: true
+auto_id_stripping: true
 repository: opendocsg/opendoc-theme
 server_PROD: https://search.opendoc.sg
 server_DEV: https://search-staging.opendoc.sg
-PDF_storage_URL:
-https://opendoc-theme-pdf.s3-ap-southeast-1.amazonaws.com/dlqs-opendoc-theme
+PDF_storage_URL:https://opendoc-theme-pdf.s3-ap-southeast-1.amazonaws.com/dlqs-opendoc-theme
 fast_build: true
 offline_search_only: false
 
