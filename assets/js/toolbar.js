@@ -61,7 +61,7 @@
 
     printButtons.forEach(function (btn) {
         btn.addEventListener('click', function () {
-            var replacedRepoName = '{{ site.repository }}'.replace(/\//g, '-')
+            var replacedRepoName = '{{ site.github.owner_name }}-{{ site.github.repository_name }}'.replace(/\//g, '-')
             var pdfUrl = '{{ site.offline }}' === 'true' ?
                 '{{ "/assets/pdfs" | relative_url }}' :
                 'https://opendoc-theme-pdf.s3-ap-southeast-1.amazonaws.com/' + replacedRepoName
